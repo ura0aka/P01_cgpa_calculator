@@ -29,6 +29,7 @@ struct Course
   }
 };
 
+
 int prompt()
 {
   int _entry{};
@@ -43,20 +44,34 @@ int prompt()
   return _entry;
 }
 
+
+
 void create_course(std::vector<Course>& list)
 {
   Course _course{};
   std::string _temp_grade{};
+  bool course_created{false};
+  while(!course_created)
+  {
+    std::cout << "Enter course name: ";
+    std::cin >> _course.m_name; clearExtra();
+    std::cout << "Enter course credit: ";
+    _course.m_credits = prompt();
+    std::cout << "Enter course grade (ex: A+,B-,etc.): ";
+    std::cin >> _temp_grade; clearExtra();
 
-  std::cout << "Enter course name: ";
-  std::cin >> _course.m_name; clearExtra();
-  std::cout << "Enter course credit: ";
-  _course.m_credits = prompt();
-  std::cout << "Enter course grade (ex: A+,B-,etc.): ";
-  std::cin >> _temp_grade; clearExtra();
-
-  _course.m_grade = c_letter_grades.at(_temp_grade);
-  list.push_back(_course);
+    std::map<std::string, float>::iterator _iter = c_letter_grades.find(_temp_grade);
+    if(_iter != c_letter_grades.end())
+    {
+      _course.m_grade = c_letter_grades.at(_temp_grade);
+      list.push_back(_course);
+      course_created = true;
+    }
+    else
+    {
+      std::cerr << "ERROR: Wrong grade format entered, make sure you enter letter grade.\n";
+    }
+  }
 }
 
 void calculate_gpa(std::vector<Course>& list)
